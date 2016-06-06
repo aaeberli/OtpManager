@@ -1,10 +1,7 @@
-namespace OtpManager.Domain.Model
+namespace OtpManager.DataAccess
 {
-    using System;
+    using Domain.Model;
     using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-
     public partial class OtpModel : DbContext
     {
         public OtpModel()
@@ -29,5 +26,6 @@ namespace OtpManager.Domain.Model
                 .HasOptional(e => e.Otp)
                 .WithRequired(e => e.User);
         }
+
     }
 }

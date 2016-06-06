@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OtpManager.Test")]
+[assembly: AssemblyTitle("OtpManager.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OtpManager.Test")]
+[assembly: AssemblyProduct("OtpManager.Common")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ca3deaa9-f005-4a8e-82f0-d756232ecb16")]
+[assembly: Guid("a7301262-265a-4c52-a890-27dd2b92b79b")]
 
 // Version information for an assembly consists of the following four values:
 //

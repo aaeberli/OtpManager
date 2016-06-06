@@ -1,13 +1,12 @@
 namespace OtpManager.Domain.Model
 {
+    using Common.Abstract;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("Otp")]
-    public partial class Otp
+    public partial class Otp : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
