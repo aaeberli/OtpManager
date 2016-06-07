@@ -188,6 +188,53 @@ namespace OtpManager.Test
         }
 
         [TestMethod]
+        public void Test_check_otp_too_long_user_ok_password_and_time()
+        {
+            // Arrange
+            string test_user = "test_user";
+            string test_pass = "test_pass";
+            string too_long_user = "1234567890_1234567890_1234567890_1234567890_1234567890_1234567890";
+
+            CleanTables();
+            CreateOtp(CreateUser(test_user), test_pass, DateTime.Now);
+            application.ResetRules();
+
+            // Act
+            Sleep(5000);
+            bool check = application.CheckOtp(too_long_user, test_pass);
+            var koRules = application.ApplicationRules.Where(r => !r.Result);
+            var lengthRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.UserIdLength && !r.Result);
+            var wrongUserRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.WrongUser && !r.Result);
+
+            // Assert
+            Assert.IsFalse(check);
+            Assert.IsTrue(koRules.Count() > 0);
+            Assert.IsNotNull(lengthRule);
+            Assert.IsNotNull(wrongUserRule);
+        }
+
+        [TestMethod]
+        public void Test_check_otp_ok_password_and_time_case_insensitiveness()
+        {
+            // Arrange
+            string test_user = "test_user";
+            string test_pass = "test_pass";
+            CleanTables();
+            CreateOtp(CreateUser(test_user), test_pass, DateTime.Now);
+            application.ResetRules();
+
+            // Act
+            Sleep(5000);
+            bool check = application.CheckOtp(test_user.ToUpper(), test_pass);
+            var koRules = application.ApplicationRules.Where(r => !r.Result);
+            var lengthRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.UserIdLength && !r.Result);
+
+            // Assert
+            Assert.IsTrue(check);
+            Assert.IsTrue(koRules.Count() == 0);
+        }
+
+        [TestMethod]
         public void Test_check_otp_ok_password_ko_time()
         {
             // Arrange
@@ -274,8 +321,8 @@ namespace OtpManager.Test
             var wrongUserRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.WrongUser && !r.Result);
 
             // Assert
-            Assert.IsTrue(check);
-            Assert.IsTrue(koRules.Count() == 0);
+            Assert.IsFalse(check);
+            Assert.IsTrue(koRules.Count() > 0);
             Assert.IsNotNull(wrongUserRule);
         }
 
@@ -298,8 +345,8 @@ namespace OtpManager.Test
             var wrongUserRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.WrongUser && !r.Result);
 
             // Assert
-            Assert.IsTrue(check);
-            Assert.IsTrue(koRules.Count() == 0);
+            Assert.IsFalse(check);
+            Assert.IsTrue(koRules.Count() > 0);
             Assert.IsNotNull(wrongUserRule);
         }
     }

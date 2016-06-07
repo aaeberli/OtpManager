@@ -81,7 +81,7 @@ namespace OtpManager.Test
         {
             string connString = ConfigurationManager.ConnectionStrings["OtpModel"].ConnectionString;
 
-            string _startDate = startDate != null ? $"'{((DateTime)startDate).ToLongDateString()}'" : "GETDATE()";
+            string _startDate = startDate != null ? $"'{((DateTime)startDate).ToString("yyyy-MM-dd hh:mm:ss.fff tt")}'" : "GETDATE()";
             string cmdText_create_user = $"INSERT INTO [Otp] ([UserId],[Password],[StartDate]) values ({id},'test_pass',{_startDate});";
             ExecuteNonQuery(connString, cmdText_create_user);
         }

@@ -108,7 +108,32 @@ namespace OtpManager.Application
 
         public bool CheckOtp(string userId, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                DateTime now = DateTime.Now;
+                Func<IRepository<User>, bool> ok = repo =>
+                {
+                    Func<User, bool> valid = u =>
+                    {
+                        bool checkExpired = ((TimeSpan)(now - u.Otp?.StartDate)).TotalMilliseconds <= Settings.Default.ValidityMsec;
+                        return checkExpired;
+                    };
+
+                    ApplicationRule wrongUserRule = new ApplicationRule(this, repo.SingleOrDefault(u => u.UserId.ToLower() == userId.ToLower()) != null, ReasonEnum.WrongUser);
+                    ApplicationRule expiredRule = new ApplicationRule(this, repo.SingleOrDefault(u => valid(u)) != null, ReasonEnum.ElementExpired);
+                    ApplicationRule validationRule1 = new ApplicationRule(this, userId.Length <= Settings.Default.UserIdLength, ReasonEnum.UserIdLength);
+                    ApplicationRule validationRule2 = new ApplicationRule(this, !string.IsNullOrEmpty(userId) && !string.IsNullOrWhiteSpace(userId), ReasonEnum.ElementValidation);
+                    ApplicationRule passwordRule = new ApplicationRule(this, repo.SingleOrDefault(u => u.Otp.Password == password) != null, ReasonEnum.WrongPassword);
+                    return wrongUserRule & expiredRule & validationRule1 & validationRule2 & passwordRule;
+                };
+                return ok(_userRepo);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                new ApplicationRule(this, false, ReasonEnum.Error);
+                return false;
+            }
         }
 
     }

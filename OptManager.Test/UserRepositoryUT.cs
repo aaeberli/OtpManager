@@ -237,7 +237,7 @@ namespace OtpManager.Test
         }
 
         [TestMethod]
-        public void Test_pick_single_element_not_null(Expression<Func<User, bool>> filter)
+        public void Test_pick_single_element_not_null()
         {
             // Arrange
             CleanTables();
@@ -257,7 +257,7 @@ namespace OtpManager.Test
         }
 
         [TestMethod]
-        public void Test_pick_single_element_null(Expression<Func<User, bool>> filter)
+        public void Test_pick_single_element_null()
         {
             // Arrange
             CleanTables();
