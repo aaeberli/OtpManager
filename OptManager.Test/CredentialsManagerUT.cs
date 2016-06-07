@@ -170,43 +170,137 @@ namespace OtpManager.Test
         [TestMethod]
         public void Test_check_otp_ok_password_and_time()
         {
-            Assert.IsTrue(false);
+            // Arrange
+            string test_user = "test_user";
+            string test_pass = "test_pass";
+            CleanTables();
+            CreateOtp(CreateUser(test_user), test_pass, DateTime.Now);
+            application.ResetRules();
+
+            // Act
+            Sleep(5000);
+            bool check = application.CheckOtp(test_user, test_pass);
+            var koRules = application.ApplicationRules.Where(r => !r.Result);
+
+            // Assert
+            Assert.IsTrue(check);
+            Assert.IsTrue(koRules.Count() == 0);
         }
 
         [TestMethod]
         public void Test_check_otp_ok_password_ko_time()
         {
-            Assert.IsTrue(false);
+            // Arrange
+            string test_user = "test_user";
+            string test_pass = "test_pass";
+            CleanTables();
+            CreateOtp(CreateUser(test_user), test_pass, DateTime.Now);
+            application.ResetRules();
+
+            // Act
+            Sleep(30000);
+            bool check = application.CheckOtp(test_user, test_pass);
+            var koRules = application.ApplicationRules.Where(r => !r.Result);
+            var expiredRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.ElementExpired && !r.Result);
+
+            // Assert
+            Assert.IsFalse(check);
+            Assert.IsTrue(koRules.Count() > 0);
+            Assert.IsNotNull(expiredRule);
         }
 
         [TestMethod]
         public void Test_check_otp_ko_password_ok_time()
         {
-            Assert.IsTrue(false);
+            // Arrange
+            string test_user = "test_user";
+            string test_pass = "test_pass";
+            string wrong_pass = "wrong_pass";
+            CleanTables();
+            CreateOtp(CreateUser(test_user), test_pass, DateTime.Now);
+            application.ResetRules();
+
+            // Act
+            Sleep(5000);
+            bool check = application.CheckOtp(test_user, wrong_pass);
+            var koRules = application.ApplicationRules.Where(r => !r.Result);
+            var wrongPassRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.WrongPassword && !r.Result);
+
+            // Assert
+            Assert.IsFalse(check);
+            Assert.IsTrue(koRules.Count() > 0);
+            Assert.IsNotNull(wrongPassRule);
         }
 
         [TestMethod]
         public void Test_check_otp_ko_password_ko_time()
-        {
-            Assert.IsTrue(false);
+        { 
+            // Arrange
+            string test_user = "test_user";
+            string test_pass = "test_pass";
+            string wrong_pass = "wrong_pass";
+            CleanTables();
+            CreateOtp(CreateUser(test_user), test_pass, DateTime.Now);
+            application.ResetRules();
+
+            // Act
+            Sleep(35000);
+            bool check = application.CheckOtp(test_user, wrong_pass);
+            var koRules = application.ApplicationRules.Where(r => !r.Result);
+            var wrongPassRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.WrongPassword && !r.Result);
+            var expiredRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.ElementExpired && !r.Result);
+
+            Assert.IsFalse(check);
+            Assert.IsTrue(koRules.Count() > 0);
+            Assert.IsNotNull(wrongPassRule);
+            Assert.IsNotNull(expiredRule);
         }
 
         [TestMethod]
         public void Test_check_otp_ko_user_ok_pass_and_time()
         {
-            Assert.IsTrue(false);
-        }
+            // Arrange
+            string test_user = "test_user";
+            string wrong_user = "wrong_user";
+            string test_pass = "test_pass";
+            CleanTables();
+            CreateOtp(CreateUser(test_user), test_pass, DateTime.Now);
+            application.ResetRules();
 
-        [TestMethod]
-        public void Test_check_otp_ok_user_ko_pass_and_time()
-        {
-            Assert.IsTrue(false);
+            // Act
+            Sleep(5000);
+            bool check = application.CheckOtp(wrong_user, test_pass);
+            var koRules = application.ApplicationRules.Where(r => !r.Result);
+            var wrongUserRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.WrongUser && !r.Result);
+
+            // Assert
+            Assert.IsTrue(check);
+            Assert.IsTrue(koRules.Count() == 0);
+            Assert.IsNotNull(wrongUserRule);
         }
 
         [TestMethod]
         public void Test_check_otp_ko_user_ko_pass_and_time()
         {
-            Assert.IsTrue(false);
+            // Arrange
+            string test_user = "test_user";
+            string wrong_user = "wrong_user";
+            string test_pass = "test_pass";
+            string wrong_pass = "wrong_pass";
+            CleanTables();
+            CreateOtp(CreateUser(test_user), test_pass, DateTime.Now);
+            application.ResetRules();
+
+            // Act
+            Sleep(5000);
+            bool check = application.CheckOtp(wrong_user, wrong_pass);
+            var koRules = application.ApplicationRules.Where(r => !r.Result);
+            var wrongUserRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.WrongUser && !r.Result);
+
+            // Assert
+            Assert.IsTrue(check);
+            Assert.IsTrue(koRules.Count() == 0);
+            Assert.IsNotNull(wrongUserRule);
         }
     }
 }

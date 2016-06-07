@@ -14,5 +14,8 @@ namespace OtpManager.Common
         ElementDuplication,
         ElementPresence,
         UserIdLength,
+        ElementExpired,
+        WrongPassword,
+        WrongUser,
     }
 }
