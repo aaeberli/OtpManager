@@ -11,67 +11,12 @@ using System.Linq;
 
 namespace OtpManager.Test
 {
+    using static Utils;
+
     [TestClass]
     public class DataAccessAdapterUT
     {
         private UnityContainer container;
-
-        private void ExecuteNonQuery(string connString, string cmdText)
-        {
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
-                SqlCommand cmd = new SqlCommand(cmdText, conn);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        private object ExecuteScalar(string connString, string cmdText)
-        {
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
-                SqlCommand cmd = new SqlCommand(cmdText, conn);
-                conn.Open();
-                return cmd.ExecuteScalar();
-            }
-        }
-
-        /// <summary>
-        /// Cleans DB for tests
-        /// </summary>
-        private void CleanTables()
-        {
-            string connString = ConfigurationManager.ConnectionStrings["OtpModel"].ConnectionString;
-
-            string cmdText_clear_opt = "DELETE FROM [Otp]";
-            string cmdText_clear_user = "DELETE FROM [User]";
-            ExecuteNonQuery(connString, cmdText_clear_opt);
-            ExecuteNonQuery(connString, cmdText_clear_user);
-        }
-
-        /// <summary>
-        /// Creates a test user directly in DB
-        /// </summary>
-        private object CreateUser()
-        {
-            string connString = ConfigurationManager.ConnectionStrings["OtpModel"].ConnectionString;
-
-            string cmdText_create_user = "INSERT INTO [User] values ('test_user'); SELECT @@IDENTITY;";
-            return ExecuteScalar(connString, cmdText_create_user);
-        }
-
-        /// <summary>
-        /// Creates an otp for the specified used directly in DB
-        /// </summary>
-        /// <returns></returns>
-        private void CreateOtp(object id)
-        {
-            string connString = ConfigurationManager.ConnectionStrings["OtpModel"].ConnectionString;
-
-            string cmdText_create_user = $"INSERT INTO [Otp] ([UserId],[Password],[StartDate]) values ({id},'test_pass',GETDATE());";
-            ExecuteNonQuery(connString, cmdText_create_user);
-        }
-
 
         [TestInitialize]
         public void TestInitialize()

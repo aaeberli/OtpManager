@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Abstract\BaseEntity.cs" />
     <Compile Include="Abstract\IDataAccessAdapter.cs" />
+    <Compile Include="Abstract\IRepository.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

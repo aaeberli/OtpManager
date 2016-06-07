@@ -14,10 +14,14 @@ namespace OtpManager.Common.Abstract
 
         TEntity Add<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
-        TEntity Remove<TEntity>(TEntity element) where TEntity : BaseEntity;
+        IEnumerable<TEntity> Add<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
 
-        IEnumerable<TEntity> RemoveRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+        TEntity Remove<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
+        IEnumerable<TEntity> Remove<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
 
         int SaveChanges();
+
+        void UndoChanges();
     }
 }
