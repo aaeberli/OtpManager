@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace OtpManager.Common
 {
-    public class Class1
+    public enum ReasonEnum
     {
+        Generic,
+        Error,
+        ElementValidation,
+        ElementDuplication,
+        ElementPresence,
+        UserIdLength,
     }
 }

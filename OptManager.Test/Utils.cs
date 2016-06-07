@@ -61,24 +61,33 @@ namespace OtpManager.Test
         /// <summary>
         /// Creates a test user directly in DB
         /// </summary>
-        public static object CreateUser()
+        public static object CreateUser(string userId)
         {
             string connString = ConfigurationManager.ConnectionStrings["OtpModel"].ConnectionString;
 
-            string cmdText_create_user = "INSERT INTO [User] values ('test_user'); SELECT @@IDENTITY;";
+            string cmdText_create_user = $"INSERT INTO [User] values ('{userId}'); SELECT @@IDENTITY;";
             return ExecuteScalar(connString, cmdText_create_user);
+        }
+        public static object CreateUser()
+        {
+            return CreateUser("test_user");
         }
 
         /// <summary>
         /// Creates an otp for the specified used directly in DB
         /// </summary>
         /// <returns></returns>
-        public static void CreateOtp(object id)
+        public static void CreateOtp(object id, string password, DateTime? startDate = null)
         {
             string connString = ConfigurationManager.ConnectionStrings["OtpModel"].ConnectionString;
 
-            string cmdText_create_user = $"INSERT INTO [Otp] ([UserId],[Password],[StartDate]) values ({id},'test_pass',GETDATE());";
+            string _startDate = startDate != null ? $"'{((DateTime)startDate).ToLongDateString()}'" : "GETDATE()";
+            string cmdText_create_user = $"INSERT INTO [Otp] ([UserId],[Password],[StartDate]) values ({id},'test_pass',{_startDate});";
             ExecuteNonQuery(connString, cmdText_create_user);
+        }
+        public static void CreateOtp(object id)
+        {
+            CreateOtp(id, "test_pass", null);
         }
     }
 }

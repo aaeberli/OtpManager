@@ -102,8 +102,8 @@ namespace OtpManager.Test
         {
             // Arrange
             CleanTables();
-            CreateOtp(CreateUser());
             string test_user = "test_user";
+            CreateOtp(CreateUser(test_user));
 
             // Act
             User user = repo.SingleOrDefault(u => u.UserId == test_user);
@@ -127,8 +127,8 @@ namespace OtpManager.Test
             // Arrange
             string message = string.Empty;
             CleanTables();
-            CreateOtp(CreateUser());
             string test_user = "test_user";
+            CreateOtp(CreateUser(test_user));
 
             // Act
             User user = repo.SingleOrDefault(u => u.UserId == test_user);
@@ -167,50 +167,113 @@ namespace OtpManager.Test
             Assert.AreEqual(Convert.ToDateTime(otpTable.Rows[0]["StartDate"]), test_date);
         }
 
-        public User Add(User entity)
+        [TestMethod]
+        public void Test_read_user_and_otp()
         {
-            throw new NotImplementedException();
+            // Arrange
+            CleanTables();
+            string test_user1 = "test_user1";
+            string test_user2 = "test_user2";
+            string password1 = "test_pass1";
+            string password2 = "test_pass2";
+            CreateOtp(CreateUser(test_user1), password1);
+            CreateOtp(CreateUser(test_user2), password2);
+
+            // Act
+            ICollection<User> users = repo.Read();
+            IEnumerable<Otp> otps = repo.Read().Select(u => u.Otp);
+            // Assert
+            Assert.IsNotNull(users.Count == 2);
+            Assert.IsNotNull(otps.Count() == 2);
         }
 
-        public void Dispose()
+        [TestMethod]
+        public void Test_read_user_and_otp_with_filter()
         {
-            throw new NotImplementedException();
+            // Arrange
+            CleanTables();
+            string test_user1 = "test_user1";
+            string test_user2 = "test_user2";
+            string password1 = "test_pass1";
+            string password2 = "test_pass2";
+            CreateOtp(CreateUser(test_user1), password1);
+            CreateOtp(CreateUser(test_user2), password2);
+
+            // Act
+            IEnumerable<User> users = repo.Read(u => u.UserId == test_user1);
+            IEnumerable<Otp> otps = repo.Read().Select(u => u.Otp);
+            // Assert
+            Assert.IsNotNull(users.Count() == 1);
+            Assert.IsNotNull(otps.Count() == 1);
         }
 
-        public ICollection<User> Read()
+        [TestMethod]
+        public void Test_delete_multimple_users_and_opts()
         {
-            throw new NotImplementedException();
+            // Arrange
+            CleanTables();
+            string test_user1 = "test_user1";
+            string test_user2 = "test_user2";
+            string password1 = "test_pass1";
+            string password2 = "test_pass2";
+            CreateOtp(CreateUser(test_user1), password1);
+            CreateOtp(CreateUser(test_user2), password2);
+
+            // Act
+            IEnumerable<User> users = repo.Read(u => u.UserId == test_user1 || u.UserId == test_user2);
+            IEnumerable<Otp> otps = users.Select(u => u.Otp);
+            foreach (User user in users)
+            {
+                user.Otp.User = null;
+            }
+            repo.Remove(users);
+            repo.SaveChanges();
+            DataTable otpTable = QueryTable("SELECT * FROM [Otp]");
+
+            // Assert
+            Assert.IsNotNull(users);
+            Assert.IsTrue(repo.Read().Count == 0);
+            Assert.IsTrue(otpTable.Rows.Count == 0);
         }
 
-        public IEnumerable<User> Read(Expression<Func<User, bool>> filter)
+        [TestMethod]
+        public void Test_pick_single_element_not_null(Expression<Func<User, bool>> filter)
         {
-            throw new NotImplementedException();
+            // Arrange
+            CleanTables();
+            string test_user1 = "test_user1";
+            string test_user2 = "test_user2";
+            string password1 = "test_pass1";
+            string password2 = "test_pass2";
+            CreateOtp(CreateUser(test_user1), password1);
+            CreateOtp(CreateUser(test_user2), password2);
+
+            // Act
+            User user = repo.SingleOrDefault(u => u.UserId == test_user2);
+
+            // Assert
+            Assert.IsNotNull(user);
+            Assert.IsNotNull(user.Otp);
         }
 
-        public IEnumerable<User> Remove(IEnumerable<User> entities)
+        [TestMethod]
+        public void Test_pick_single_element_null(Expression<Func<User, bool>> filter)
         {
-            throw new NotImplementedException();
-        }
+            // Arrange
+            CleanTables();
+            string test_user1 = "test_user1";
+            string test_user2 = "test_user2";
+            string password1 = "test_pass1";
+            string password2 = "test_pass2";
+            CreateOtp(CreateUser(test_user1), password1);
+            CreateOtp(CreateUser(test_user2), password2);
+            string non_existent_user = "non_existent_user";
 
-        public User Remove(User entity)
-        {
-            throw new NotImplementedException();
-        }
+            // Act
+            User user = repo.SingleOrDefault(u => u.UserId == non_existent_user);
 
-        public int SaveChanges()
-        {
-            throw new NotImplementedException();
-        }
-
-        public User SingleOrDefault(Expression<Func<User, bool>> filter)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public void UndoChanges()
-        {
-            throw new NotImplementedException();
+            // Assert
+            Assert.IsNull(user);
         }
     }
 }

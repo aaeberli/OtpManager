@@ -41,10 +41,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\BaseEntity.cs" />
+    <Compile Include="Abstract\IApplicationServiceWithRules.cs" />
     <Compile Include="Abstract\IDataAccessAdapter.cs" />
+    <Compile Include="Abstract\ILogger.cs" />
+    <Compile Include="Abstract\IOtpGenerator.cs" />
     <Compile Include="Abstract\IRepository.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="ApplicationRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReasonEnum.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
