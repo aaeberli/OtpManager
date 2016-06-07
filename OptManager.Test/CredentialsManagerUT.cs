@@ -57,6 +57,26 @@ namespace OtpManager.Test
 
 
         [TestMethod]
+        public void Test_create_otp_new_with_spaces()
+        {
+            // Arrange
+            CleanTables();
+            application.ResetRules();
+            string test_user = "test user";
+
+            // Act
+            string password = application.CreateOtp(test_user);
+            var koRules = application.ApplicationRules.Where(r => !r.Result);
+            var validationRule = application.ApplicationRules.SingleOrDefault(r => r.Reason == ReasonEnum.ElementValidation && !r.Result);
+
+            // Assert
+            Assert.IsNull(password);
+            Assert.IsTrue(koRules.Count() > 0);
+            Assert.IsNotNull(validationRule);
+        }
+
+
+        [TestMethod]
         public void Test_create_otp_with_userid_too_long()
         {
             // Arrange
