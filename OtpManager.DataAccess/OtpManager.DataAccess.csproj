@@ -93,7 +93,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="DB\OtpManagerDB.mdf" />
+    <None Include="DB\OtpManagerDB.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="DB\OtpManagerDB_log.ldf">
       <DependentUpon>OtpManagerDB.mdf</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

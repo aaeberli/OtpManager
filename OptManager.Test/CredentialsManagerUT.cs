@@ -25,6 +25,7 @@ namespace OtpManager.Test
         [TestInitialize]
         public void TestInitialize()
         {
+            AppDomain.CurrentDomain.SetData("DataDirectory", AppDomain.CurrentDomain.BaseDirectory);
             container = new UnityContainer();
 
             container
