@@ -67,7 +67,8 @@ namespace OtpManager.Application
                     ApplicationRule existentRule = new ApplicationRule(this, repo.SingleOrDefault(u => duplicate(u)) == null, ReasonEnum.ElementDuplication);
                     ApplicationRule validationRule1 = new ApplicationRule(this, userId.Length <= Settings.Default.UserIdLength, ReasonEnum.UserIdLength);
                     ApplicationRule validationRule2 = new ApplicationRule(this, !string.IsNullOrEmpty(userId) && !string.IsNullOrWhiteSpace(userId), ReasonEnum.ElementValidation);
-                    return existentRule & validationRule1 & validationRule2;
+                    ApplicationRule validationRule3 = new ApplicationRule(this, !userId.Contains(' '), ReasonEnum.ElementValidation);
+                    return existentRule & validationRule1 & validationRule2 & validationRule3;
                 };
                 if (ok(_userRepo))
                 {
